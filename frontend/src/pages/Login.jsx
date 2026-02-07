@@ -11,6 +11,10 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
+        const LOGIN_API = import.meta.env.VITE_API_LOGIN;    
+        const BASE_URL = import.meta.env.VITE_API_BASE_URL_API;
+
+
         try {
             const res = await fetch("http://localhost:8000/api/auth/login/", {
                 method: "POST",

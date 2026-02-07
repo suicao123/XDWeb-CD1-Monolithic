@@ -19,11 +19,16 @@ const ProductDetail = () => {
     const [selectedColor, setSelectedColor] = useState('Trắng');
     const [selectedRom, setSelectedRom] = useState('256GB');
 
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    const BASE_URL_API = import.meta.env.VITE_API_BASE_URL_API;
+    const PRODUCT_API = import.meta.env.VITE_API_PRODUCT;
+    const CART_API = import.meta.env.VITE_API_CART;
+
     // Hàm xử lý link ảnh (tránh lỗi 404)
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "https://via.placeholder.com/150";
         if (imagePath.startsWith("http")) return imagePath;
-        return `http://localhost:8000${imagePath}`;
+        return `${BASE_URL}${imagePath}`;
     };
 
     // Hàm format giá
@@ -35,7 +40,7 @@ const ProductDetail = () => {
         setLoading(true);
 
         // Fetch chi tiết sản phẩm
-        fetch(`http://localhost:8000/api/product/${id}`)
+        fetch(`${BASE_URL_API}${PRODUCT_API}/${id}`)
             .then(res => res.json())
             .then(data => {
                 setProduct(data);
@@ -44,7 +49,7 @@ const ProductDetail = () => {
             .catch(err => console.error("Lỗi tải sản phẩm:", err));
 
         // Fetch sản phẩm mới (để hiện ở dưới cùng)
-        fetch("http://localhost:8000/api/product?new=true")
+        fetch(`${BASE_URL}${PRODUCT_API}?new=true`)
             .then(res => res.json())
             .then(data => setNewProducts(data))
             .catch(err => console.error("Lỗi tải sản phẩm mới:", err));
@@ -60,13 +65,12 @@ const ProductDetail = () => {
 
         if (!token) {
             alert("Vui lòng đăng nhập để mua hàng!");
-            // Lưu lại trang hiện tại để login xong quay lại
             localStorage.setItem("redirect_after_login", window.location.pathname + window.location.search);
             navigate('/login');
             return;
         }
 
-        fetch("http://localhost:8000/api/cart/add/", {
+        fetch(`${BASE_URL_API}${CART_API}/add/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

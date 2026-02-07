@@ -13,11 +13,16 @@ const SearchResult = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+    const BASE_URL_API = import.meta.env.VITE_API_BASE_URL_API;
+    const PRODUCT_API = import.meta.env.VITE_API_PRODUCT;
+
     // Hàm xử lý link ảnh (tránh lỗi 404)
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "https://via.placeholder.com/150";
         if (imagePath.startsWith("http")) return imagePath;
-        return `http://localhost:8000${imagePath}`;
+        return `${BASE_URL}${imagePath}`;
     };
 
     // Hàm format giá
@@ -33,7 +38,7 @@ const SearchResult = () => {
         setError(null);
 
         // Gọi API tìm kiếm của Django
-        fetch(`http://localhost:8000/api/product/search/?q=${encodeURIComponent(query)}`)
+        fetch(`${BASE_URL_API}${PRODUCT_API}/search/?q=${encodeURIComponent(query)}`)
             .then(res => {
                 if (!res.ok) throw new Error("Lỗi kết nối Server");
                 return res.json();

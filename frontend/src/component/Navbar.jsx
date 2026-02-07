@@ -38,8 +38,10 @@ const Navbar = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        localStorage.removeItem("user");
+        alert("Đã đăng xuất");
         window.location.href = '/login';
     };
 

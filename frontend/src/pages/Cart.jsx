@@ -13,11 +13,15 @@ const Cart = () => {
     // Hàm format giá tiền
     const formatPrice = (price) => new Intl.NumberFormat('vi-VN').format(price);
 
+
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+
     // Hàm xử lý link ảnh
     const getImageUrl = (imagePath) => {
         if (!imagePath) return "https://via.placeholder.com/80";
         if (imagePath.startsWith("http")) return imagePath;
-        return `http://localhost:8000${imagePath}`;
+        return `${BASE_URL}${imagePath}`;
     };
 
     // 1. Load dữ liệu giỏ hàng từ API
@@ -25,13 +29,14 @@ const Cart = () => {
         const token = localStorage.getItem("access");
 
         if (!token) {
-            alert("Vui lòng đăng nhập để xem giỏ hàng!");
+            alert("Vui lầm đăng nhập để xem giỏ hàng!");
             navigate('/login');
             return;
         }
-
+        const BASE_URL_API = import.meta.env.VITE_API_BASE_URL_API;
+        const CART_API = import.meta.env.VITE_API_CART;
         // Giả sử API lấy danh sách giỏ hàng là GET /api/cart/
-        fetch("http://localhost:8000/api/cart/", {
+        fetch(`${BASE_URL_API}${CART_API}`, {
             headers: {
                 "Authorization": "Bearer " + token
             }

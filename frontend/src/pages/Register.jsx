@@ -16,7 +16,8 @@ const Register = () => {
         confirm_password: ''
     });
 
-    const API_BASE = "http://localhost:8000/api";
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL_API;
+    
 
     // Hàm xử lý khi người dùng nhập liệu
     const handleChange = (e) => {
@@ -31,7 +32,7 @@ const Register = () => {
         }
 
         try {
-            const res = await fetch(`${API_BASE}/auth/send-otp/`, {
+            const res = await fetch(`${BASE_URL}/auth/send-otp/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: formData.email })
@@ -59,7 +60,7 @@ const Register = () => {
         }
 
         try {
-            const res = await fetch(`${API_BASE}/auth/register/`, {
+            const res = await fetch(`${BASE_URL}/auth/register/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData)

@@ -9,15 +9,19 @@ const Home = () => {
     const [newProducts, setNewProducts] = useState([]);
     const [tetProducts, setTetProducts] = useState([]);
 
+    const BASE_URL = import.meta.env.VITE_API_BASE_URL_API;
+    const PRODUCT_API = import.meta.env.VITE_API_PRODUCT;
+
+
     useEffect(() => {
         // Load New Products
-        fetch("http://localhost:8000/api/product?new=true")
+        fetch(`${BASE_URL}${PRODUCT_API}?new=true`)
             .then(res => res.json())
             .then(data => setNewProducts(data))
             .catch(err => console.error("Error loading new products:", err));
 
         // Load Tet Products
-        fetch("http://localhost:8000/api/product?")
+        fetch(`${BASE_URL}${PRODUCT_API}?new=true`)
             .then(res => res.json())
             .then(data => setTetProducts(data))
             .catch(err => console.error("Error loading tet products:", err));
