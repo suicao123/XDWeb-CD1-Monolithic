@@ -15,3 +15,5 @@ requests==2.32.5
 rest-framework-simplejwt==0.0.2
 sqlparse==0.5.5
 urllib3==2.6.3
+gunicorn
+whitenoise
