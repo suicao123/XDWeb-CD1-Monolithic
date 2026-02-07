@@ -104,17 +104,14 @@ DATABASES = {
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
         'OPTIONS': {
+            'ssl': {
+                'ca': None   # TiDB Cloud cho phép SSL mặc định
+            },
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            **(
-                {
-                    'ssl': {
-                        'ca': os.getenv('DB_SSL_CA')
-                    }
-                } if os.getenv('DB_SSL_CA') else {}
-            )
         }
     }
 }
+
 
 
 # Fix lỗi MariaDB 10.4
