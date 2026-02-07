@@ -3,13 +3,18 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
+# =========================
+# LOAD ENV
+# =========================
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# =========================
+# SECURITY
+# =========================
 SECRET_KEY = os.getenv('SECRET_KEY')
-# DEBUG = os.getenv('DEBUG') == 'True'
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -24,10 +29,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
     'corsheaders',
+    'django_filters',
+
     'app',
-    'django_filters'
 ]
 
 
@@ -35,7 +42,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # =========================
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',   # CORS phải ở trên
+    'corsheaders.middleware.CorsMiddleware',  # phải ở trên
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,12 +54,15 @@ MIDDLEWARE = [
 
 
 # =========================
-# CORS CONFIG (RẤT QUAN TRỌNG)
+# CORS
 # =========================
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 
+# =========================
+# URL CONFIG
+# =========================
 ROOT_URLCONF = 'phone.urls'
 
 
@@ -62,7 +72,7 @@ ROOT_URLCONF = 'phone.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # nếu sau này cần
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -76,25 +86,40 @@ TEMPLATES = [
 ]
 
 
+# =========================
+# WSGI
+# =========================
 WSGI_APPLICATION = 'phone.wsgi.application'
 
 
 # =========================
-# DATABASE (MySQL)
+# DATABASE (ENV)
 # =========================
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'phone_db',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            **(
+                {
+                    'ssl': {
+                        'ca': os.getenv('DB_SSL_CA')
+                    }
+                } if os.getenv('DB_SSL_CA') else {}
+            )
         }
     }
 }
+
+
+# Fix lỗi MariaDB 10.4
+from django.db.backends.base.base import BaseDatabaseWrapper
+BaseDatabaseWrapper.check_database_version_supported = lambda self: None
 
 
 # =========================
@@ -125,20 +150,21 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # =========================
-# MEDIA FILES (ẢNH PRODUCT)
+# MEDIA FILES
 # =========================
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # =========================
 # DEFAULT PK
 # =========================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# 2. Bỏ qua kiểm tra phiên bản Database (Sửa lỗi MariaDB 10.4)
-from django.db.backends.base.base import BaseDatabaseWrapper
-BaseDatabaseWrapper.check_database_version_supported = lambda self: None
 
+
+# =========================
+# REST FRAMEWORK + JWT
+# =========================
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -146,18 +172,20 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+
+# =========================
+# EMAIL
+# =========================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-load_dotenv()
+
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
-
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
