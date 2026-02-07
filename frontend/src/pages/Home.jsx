@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../component/Navbar'; 
-import Footer from '../component/Footer'; 
-import { Link } from 'react-router-dom';    
+import Navbar from '../component/Navbar';
+import Footer from '../component/Footer';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '../css/style.css'; 
+import '../css/style.css';
 
 const Home = () => {
     const [newProducts, setNewProducts] = useState([]);
@@ -21,7 +21,7 @@ const Home = () => {
             .catch(err => console.error("Error loading new products:", err));
 
         // Load Tet Products
-        fetch(`${BASE_URL}${PRODUCT_API}?new=true`)
+        fetch(`${BASE_URL}${PRODUCT_API}`)
             .then(res => res.json())
             .then(data => setTetProducts(data))
             .catch(err => console.error("Error loading tet products:", err));
@@ -38,12 +38,12 @@ const Home = () => {
 
             <section className="hero-section pt-5">
                 <div className="container-fluid p-0 position-relative">
-                    <img 
-                        src="/img/cny-gifting-header-202601.png" 
-                        className="w-100 hero-bg-img" 
-                        alt="Tết Banner" 
+                    <img
+                        src="/img/cny-gifting-header-202601.png"
+                        className="w-100 hero-bg-img"
+                        alt="Tết Banner"
                         width="2062"
-                        height="290" 
+                        height="290"
                         style={{ objectFit: 'cover' }}
                     />
 
@@ -86,7 +86,7 @@ const Home = () => {
 
                 <div className="row g-4" id="product-list-new">
                     {newProducts.map((p) => (
-                
+
                         <div key={p.id} className="col-xl-3 col-lg-4 col-md-6 col-12">
                             <Link to={`/detail/${p.id}`} className="text-decoration-none text-dark">
                                 <div className="card product-card p-4 h-100 border-0 shadow-sm" style={{ borderRadius: '24px', transition: 'transform 0.3s ease' }}>
@@ -126,7 +126,7 @@ const Home = () => {
                 <div className="row g-4" id="product-list-tet">
                     {tetProducts.map((p) => (
                         <div key={p.id} className="col-xl-3 col-lg-4 col-md-6 col-12">
-                             <Link to={`/detail/${p.id}`} className="text-decoration-none text-dark">
+                            <Link to={`/detail/${p.id}`} className="text-decoration-none text-dark">
                                 <div className="card product-card p-4 h-100 border-0 shadow-sm" style={{ borderRadius: '24px', transition: 'transform 0.3s ease' }}>
                                     <div className="card-body d-flex flex-column align-items-center text-center">
                                         <div style={{ height: '180px', width: '100%' }} className="d-flex align-items-center justify-content-center mb-4">
@@ -144,7 +144,7 @@ const Home = () => {
                     ))}
                 </div>
             </section>
-            
+
             <Footer />
             <div id="footer-container"></div>
         </div>
